@@ -1,0 +1,77 @@
+from rest_framework.decorators import api_view
+from .gateway import forward_request
+
+# Endpoints for customer_service
+@api_view(["POST"])
+def register(request):
+    """Handles register requests and forwards them to customer_service"""
+    return forward_request("customer_service", "/api/register/", "POST", request)
+
+@api_view(["POST"])
+def login(request):
+    """Handles login requests and forwards them to customer_service"""
+    return forward_request("customer_service", "/api/login/", "POST", request)
+
+@api_view(["GET"])
+def get_customer_details(request, user_id):
+    """Fetches customer details from customer_service"""
+    return forward_request("customer_service", f"/api/profile/{user_id}/", "GET", request)
+
+# Endpoints for order_service
+@api_view(["POST"])
+def create_order(request):
+    """Handles order creation requests and forwards them to order_service"""
+    return forward_request("order_service", "/api/orders/", "POST", request)
+
+@api_view(["GET"])
+def get_order_details(request, order_id):
+    """Fetches order details from order_service"""
+    return forward_request("order_service", f"/api/orders/{order_id}/", "GET", request)
+
+@api_view(["PUT"])
+def update_order_status(request, order_id):
+    """Update order status to order_service"""
+    return forward_request("order_service", f"/api/orders/update_status/{order_id}/", "PUT", request)
+
+# Endpoints for product_service
+@api_view(["GET"])
+def get_product_list(request):
+    """Fetches product list from product_service"""
+    return forward_request("product_service", "/api/products/", "GET", request)
+
+@api_view(["GET"])
+def get_product_details(request, product_id):
+    """Fetches product details from product_service"""
+    return forward_request("product_service", f"/api/products/{product_id}/", "GET", request)
+
+# Endpoints for payment_service
+@api_view(["POST"])
+def create_payment(request):
+    """Handles payment creation requests (after placing an order) and forwards them to payment_service"""
+    return forward_request("payment_service", "/api/payments/", "POST", request)
+
+@api_view(["GET"])
+def get_payment_details(request, order_id):
+    """Fetches payment details from payment_service"""
+    return forward_request("payment_service", f"/api/payments/{order_id}/", "GET", request)
+
+@api_view(["PUT"])
+def update_payment_status(request, order_id):
+    """Update payment status to payment_service"""
+    return forward_request("payment_service", f"/api/payments/update_status/{order_id}/", "PUT", request)
+
+# Endpoints for shipment_service
+@api_view(["POST"])
+def create_shipment(request):
+    """Handles shipment creation requests (after placing an order) and forwards them to shipment_service"""
+    return forward_request("shipment_service", "/api/shipments/", "POST", request)
+
+@api_view(["GET"])
+def get_shipment_details(request, order_id):
+    """Fetches shipments details from shipment_service"""
+    return forward_request("shipment_service", f"/api/shipments/{order_id}/", "GET", request)
+
+@api_view(["PUT"])
+def update_shipment_status(request, order_id):
+    """Update shipments status to shipment_service"""
+    return forward_request("shipment_service", f"/api/shipments/update_status/{order_id}/", "PUT", request)
