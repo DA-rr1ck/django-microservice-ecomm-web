@@ -3,10 +3,11 @@ from django.http import JsonResponse
 
 MICROSERVICES = {
     "customer_service": "http://localhost:8001",
-    "order_service": "http://localhost:8002",
-    "product_service": "http://localhost:8003",
-    "payment_service": "http://localhost:8004",
-    "shipment_service": "http://localhost:8005",
+    "cart_service": "http://localhost:8002",
+    "order_service": "http://localhost:8003",
+    "product_service": "http://localhost:8004",
+    "payment_service": "http://localhost:8005",
+    "shipment_service": "http://localhost:8006",
 }
 
 def forward_request(service_name, endpoint, method, request):
@@ -27,6 +28,7 @@ def forward_request(service_name, endpoint, method, request):
         response = requests.put(service_url, json=request.data, headers=headers)
     elif method == "DELETE":
         response = requests.delete(service_url, headers=headers)
+        return JsonResponse({"message": "Success"}, status=response.status_code)
     else:
         return JsonResponse({"error": "Method not supported"}, status=405)
 

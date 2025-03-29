@@ -5,7 +5,7 @@ from .models import Shipment
 from .serializers import ShipmentSerializer
 
 CUSTOMER_SERVICE_URL = "http://localhost:8001/api/profile/"
-ORDER_SERVICE_URL = "http://localhost:8002/api/orders/"
+ORDER_SERVICE_URL = "http://localhost:8003/api/orders/"
 
 class CreateShipmentView(generics.CreateAPIView):
     queryset = Shipment.objects.all()

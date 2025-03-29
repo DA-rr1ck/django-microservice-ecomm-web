@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from .models import Payment
 from .serializers import PaymentSerializer
 
-ORDER_SERVICE_URL = "http://localhost:8002/api/orders/"
-SHIPPING_SERVICE_URL = "http://localhost:8005/api/shipments/"
+ORDER_SERVICE_URL = "http://localhost:8003/api/orders/"
+SHIPPING_SERVICE_URL = "http://localhost:8006/api/shipments/"
 
 class CreatePaymentView(generics.CreateAPIView):
     queryset = Payment.objects.all()
@@ -34,9 +34,6 @@ class CreatePaymentView(generics.CreateAPIView):
                 "order_id": payment.order_id,
                 "customer_id": payment.customer_id
             })
-
-        # Update order status in order_service
-        # requests.post(f"{ORDER_SERVICE_URL}update_status/{payment.order_id}/", json={"status": "paid"})
 
         return response
 

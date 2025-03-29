@@ -17,6 +17,32 @@ def get_customer_details(request, user_id):
     """Fetches customer details from customer_service"""
     return forward_request("customer_service", f"/api/profile/{user_id}/", "GET", request)
 
+# Endpoints for cart_service
+@api_view(["GET"])
+def get_cart(request, user_id):
+    """Fetches cart from cart_service"""
+    return forward_request("cart_service", f"/api/cart/{user_id}/", "GET", request)
+
+@api_view(["POST"])
+def add_to_cart(request):
+    """Add item to cart in cart_service"""
+    return forward_request("cart_service", "/api/cart/add/", "POST", request)
+
+@api_view(["PUT"])
+def update_cart(request, cart_id):
+    """Update cart details in cart_service"""
+    return forward_request("cart_service", f"/api/cart/update/{cart_id}/", "PUT", request)
+
+@api_view(["DELETE"])
+def remove_from_cart(request, cart_id):
+    """Remove item from cart in cart_service"""
+    return forward_request("cart_service", f"/api/cart/remove/{cart_id}/", "DELETE", request)
+
+@api_view(["POST"])
+def checkout(request, user_id):
+    """Checkout in cart_service"""
+    return forward_request("cart_service", f"/api/cart/checkout/{user_id}/", "POST", request)
+
 # Endpoints for order_service
 @api_view(["POST"])
 def create_order(request):

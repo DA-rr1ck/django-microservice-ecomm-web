@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import register, login, get_customer_details, create_order, get_order_details, update_order_status, get_product_list, get_product_details, create_payment, get_payment_details, update_payment_status, create_shipment, get_shipment_details, update_shipment_status
+from .views import register, login, get_customer_details, get_cart, add_to_cart, update_cart, remove_from_cart, checkout, create_order, get_order_details, update_order_status, get_product_list, get_product_details, create_payment, get_payment_details, update_payment_status, create_shipment, get_shipment_details, update_shipment_status
 
 urlpatterns = [
     # URLs for customer_service
@@ -7,9 +7,19 @@ urlpatterns = [
     path("api/login/", login, name="login"),
     path("api/profile/<int:user_id>/", get_customer_details, name="get_customer_details"),
 
+    # URLs for cart_service
+
+        # todo: change to user_id for update/remove
+
+    path("api/cart/<int:user_id>/", get_cart, name='get_cart'),
+    path("api/cart/add/", add_to_cart, name='add_to_cart'),
+    path("api/cart/update/<int:cart_id>/", update_cart, name='update_cart'),
+    path("api/cart/remove/<int:cart_id>/", remove_from_cart, name='remove_from_cart'),
+    path("api/cart/checkout/<int:user_id>/", checkout, name='checkout'),
+
     # URLs for order_service
 
-    # todo: add an endpoint to show all ongoing orders
+        # todo: add an endpoint to show all ongoing orders
 
     path("api/order/create/", create_order, name="create_order"),
     path("api/order/<int:order_id>/", get_order_details, name="get_order_details"),
@@ -17,7 +27,7 @@ urlpatterns = [
 
     # URLs for product_service
 
-    # todo: add an endpoint to add products
+        # todo: add an endpoint to add products
 
     path("api/products/", get_product_list, name="get_product_list"),
     path("api/product/<str:product_id>/", get_product_details, name="get_product_details"),
