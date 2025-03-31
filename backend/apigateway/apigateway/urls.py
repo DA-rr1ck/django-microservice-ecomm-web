@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import register, login, get_customer_details, get_cart, add_to_cart, update_cart, remove_from_cart, checkout, create_order, get_order_details, update_order_status, get_product_list, get_product_details, create_payment, get_payment_details, update_payment_status, create_shipment, get_shipment_details, update_shipment_status
+from .views import register, login, get_customer_details, get_cart, add_to_cart, update_cart, remove_from_cart, checkout, create_order, get_order_details, update_order_status, get_product_list, get_product_details, create_payment, get_payment_details, update_payment_status, create_shipment, get_shipment_details, update_shipment_status, create_review, get_reviews_by_product, get_reviews_by_product_by_customer, get_recommendations
 
 urlpatterns = [
     # URLs for customer_service
@@ -19,7 +19,7 @@ urlpatterns = [
 
     # URLs for order_service
 
-        # todo: add an endpoint to show all ongoing orders
+        # todo: add an endpoint to show all ongoing orders of a user
 
     path("api/order/create/", create_order, name="create_order"),
     path("api/order/<int:order_id>/", get_order_details, name="get_order_details"),
@@ -41,5 +41,13 @@ urlpatterns = [
     path('api/shipment/create/', create_shipment, name='create_shipment'),
     path('api/shipment/<int:order_id>/', get_shipment_details, name='get_shipment_details'),
     path('api/shipment/update_status/<int:order_id>/', update_shipment_status, name='update_shipment_status'),
+
+    # URLs for review_service
+    path('api/review/create/', create_review, name='create_review'),
+    path('api/reviews/<str:product_id>/', get_reviews_by_product, name='get_reviews_by_product'),
+    path('api/reviews/<int:user_id>/<str:product_id>/', get_reviews_by_product_by_customer, name='get_reviews_by_product_by_customer'),
+
+    # URLs for recommendation_service
+    path("api/recommendations/", get_recommendations, name='get_recommendations'),
 
 ]

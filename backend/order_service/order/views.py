@@ -5,6 +5,7 @@ from .models import Order, OrderItem
 from .serializers import OrderSerializer
 
 CART_SERVICE_URL = "http://localhost:8002/api/cart/"
+PRODUCT_SERVICE_URL = "http://localhost:8004/api/products/"
 PAYMENT_SERVICE_URL = "http://localhost:8005/api/payments/"
 
 class CreateOrderView(generics.CreateAPIView):
@@ -32,9 +33,24 @@ class CreateOrderView(generics.CreateAPIView):
         ]
         OrderItem.objects.bulk_create(order_items)
 
+        # Update order_count for product_service
+        for item in items:
+            self.update_product_order_count(item)
+
         self.trigger_payment(order.id, order.customer_id, total_price, order.payment_method)
 
         return Response({"message": "Order placed successfully", "order_id": order.id}, status=status.HTTP_201_CREATED)
+    
+    def update_product_order_count(self, item):
+        product_id = item["product_id"]
+        product_quantity = item["quantity"]
+
+        product_response = requests.get(f"{PRODUCT_SERVICE_URL}{product_id}/")
+        product_data = product_response.json()
+
+        product_order_count = product_data["order_count"] + product_quantity
+
+        requests.put(f"{PRODUCT_SERVICE_URL}{product_id}/", json={"order_count": product_order_count})
 
     def trigger_payment(self, order_id, customer_id, amount, payment_method):
         """Notify `payment_service` for payment processing."""

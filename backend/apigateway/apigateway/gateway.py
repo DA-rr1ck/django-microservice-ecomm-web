@@ -8,6 +8,8 @@ MICROSERVICES = {
     "product_service": "http://localhost:8004",
     "payment_service": "http://localhost:8005",
     "shipment_service": "http://localhost:8006",
+    "review_service": "http://localhost:8007",
+    "recommendation_service": "http://localhost:8008",
 }
 
 def forward_request(service_name, endpoint, method, request):

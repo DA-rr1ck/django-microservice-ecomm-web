@@ -7,6 +7,10 @@ class ProductSerializer(serializers.Serializer):
     description = serializers.CharField(allow_blank=True, required=False)
     price = serializers.FloatField()
     stock = serializers.IntegerField(default=0)
+    view_count = serializers.IntegerField(default=0)
+    cart_count = serializers.IntegerField(default=0)
+    order_count = serializers.IntegerField(default=0)
+    avg_rating = serializers.FloatField()
 
     def create(self, validated_data):
         return Product.objects.create(**validated_data)

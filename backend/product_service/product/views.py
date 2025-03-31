@@ -28,10 +28,20 @@ class ProductDetailView(APIView):
         except Product.DoesNotExist:
             return None
 
+    def track_view(self, product_id):
+        """Increment the view count in Product"""
+        product = self.get_object(product_id)
+        product.view_count += 1
+        product.save()
+
     def get(self, request, product_id):
         product = self.get_object(product_id)
         if product is None:
             return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Track the view count
+        self.track_view(product_id)
+
         serializer = ProductSerializer(product)
         return Response(serializer.data)
 

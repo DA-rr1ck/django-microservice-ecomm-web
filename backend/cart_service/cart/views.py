@@ -31,6 +31,8 @@ def add_to_cart(request):
     product_name = product_data["name"]
     product_price = float(product_data["price"])
 
+    product_cart_count = product_data["cart_count"] + 1
+
     # Save to Cart
     cart_item = CartItem.objects.create(
         customer_id=customer_id,
@@ -39,6 +41,8 @@ def add_to_cart(request):
         quantity=quantity,
         price=product_price
     )
+
+    requests.put(f"{PRODUCT_SERVICE_URL}{product_id}/", json={"cart_count": product_cart_count})
     
     return Response(CartItemSerializer(cart_item).data, status=status.HTTP_201_CREATED)
 

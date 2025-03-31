@@ -5,5 +5,9 @@ class Product(Document):
     description = StringField()
     price = FloatField(required=True)
     stock = IntField(default=0)
+    view_count = IntField(default=0)
+    cart_count = IntField(default=0)
+    order_count = IntField(default=0)
+    avg_rating = FloatField(default=0.0)
 
     meta = {"collection": "products"}  # Collection name in MongoDB

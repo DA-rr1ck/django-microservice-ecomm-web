@@ -101,3 +101,25 @@ def get_shipment_details(request, order_id):
 def update_shipment_status(request, order_id):
     """Update shipments status to shipment_service"""
     return forward_request("shipment_service", f"/api/shipments/update_status/{order_id}/", "PUT", request)
+
+# Endpoints for review_service
+@api_view(["POST"])
+def create_review(request):
+    """Handles review creation requests and forwards them to review_service"""
+    return forward_request("review_service", "/api/ratings/", "POST", request)
+
+@api_view(["GET"])
+def get_reviews_by_product(request, product_id):
+    """Fetches reviews by product from review_service"""
+    return forward_request("review_service", f"/api/ratings/{product_id}/", "GET", request)
+
+@api_view(["GET"])
+def get_reviews_by_product_by_customer(request, user_id, product_id):
+    """Fetches reviews by product made by a customer from review_service"""
+    return forward_request("review_service", f"/api/ratings/{user_id}/{product_id}/", "GET", request)
+
+# Endpoints for recommendation_service
+@api_view(["GET"])
+def get_recommendations(request):
+    """Fetches recommended products from recommendation_service"""
+    return forward_request("recommendation_service", "/api/recommendations/", "GET", request)
