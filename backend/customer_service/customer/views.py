@@ -1,41 +1,38 @@
-from rest_framework import generics
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework import status
+from django.contrib.auth.hashers import check_password
 from .models import Customer
 from .serializers import RegisterSerializer, LoginSerializer, ProfileSerializer
 
-class RegisterView(generics.CreateAPIView):
-    queryset = Customer.objects.all()
-    serializer_class = RegisterSerializer
-    permission_classes = [AllowAny]
+@api_view(['POST'])
+def register_view(request):
+    serializer = RegisterSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "Registration successful"}, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        response.data["message"] = "User registered successfully."
-        return response
-
-class LoginView(generics.GenericAPIView):
-    serializer_class = LoginSerializer
-    permission_classes = [AllowAny]
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        
-        return Response({
-            "message": "Login successful.",
-            "user": serializer.validated_data
-        })
-
-class ProfileView(generics.RetrieveAPIView):
-    queryset = Customer.objects.all()
-    serializer_class = ProfileSerializer
-    permission_classes = [AllowAny]
-
-    def get(self, request, user_id, *args, **kwargs):
+@api_view(['POST'])
+def login_view(request):
+    serializer = LoginSerializer(data=request.data)
+    if serializer.is_valid():
+        username = serializer.validated_data['username']
+        password = serializer.validated_data['password']
         try:
-            user = Customer.objects.get(id=user_id)
-            serializer = self.get_serializer(user)
-            return Response(serializer.data)
+            customer = Customer.objects.get(username=username)
+            if check_password(password, customer.password):
+                return Response({"message": "Login successful", "customer_id": customer.id}, status=status.HTTP_200_OK)
+            else:
+                return Response({"message": "Invalid password"}, status=status.HTTP_401_UNAUTHORIZED)
         except Customer.DoesNotExist:
-            return Response({"error": "User not found"}, status=404)
+            return Response({"error": "Customer not found"}, status=status.HTTP_404_NOT_FOUND)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def profile_view(request, customer_id):
+    try:
+        customer = Customer.objects.get(pk=customer_id)
+        return Response(ProfileSerializer(customer).data)
+    except Customer.DoesNotExist:
+        return Response({"error": "Customer not found"}, status=status.HTTP_404_NOT_FOUND)
